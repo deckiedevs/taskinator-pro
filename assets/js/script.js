@@ -103,7 +103,7 @@ $(".list-group").on("click", "span", function() {
   // swap elements
   $(this).replaceWith(dateInput);
 
-  dateInput.trigger(focus);
+  dateInput.trigger("focus");
 });
 
 // save new due date
@@ -135,6 +135,54 @@ $(".list-group").on("blur", "input[type='text']", function () {
 
   // replace input with span element
   $(this).replaceWith(taskSpan);
+});
+
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event) {}, 
+  deactivate: function(event) {},
+  over: function(event) {},
+  out: function(event) {},
+  update: function(event) {
+    var tempArr = [];
+
+    // loop over current set of children in sortable list
+    $(this).children().each(function() {
+      var text = $(this)
+      .find("p")
+      .text()
+      .trim();
+
+      var date = $(this)
+      .find("span")
+      .text()
+      .trim();
+
+      tempArr.push({
+        text: text,
+        date: date
+      });
+    });
+    var arrName = $(this)
+    .attr("id")
+    .replace("list-", "");
+
+    tasks[arrName] = tempArr;
+    saveTasks();
+  }
+})
+
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch", 
+  drop: function(event, ui) {
+    ui.draggable.remove();
+  }, 
+  over: function(event, ui) {},
+  out: function(event,ui) {}
 });
 
 // modal was triggered
