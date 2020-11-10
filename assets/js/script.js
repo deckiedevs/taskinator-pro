@@ -176,8 +176,12 @@ $(".card .list-group").sortable({
   scroll: false,
   tolerance: "pointer",
   helper: "clone",
-  activate: function(event) {}, 
-  deactivate: function(event) {},
+  activate: function(event) {
+    $(".bottom-trash").addClass("class", "bottom-trash-drag");
+  }, 
+  deactivate: function(event) {
+    $(".bottom-trash").removeClass("bottom-trash-drag");
+  },
   over: function(event) {},
   out: function(event) {},
   update: function(event) {
@@ -214,9 +218,14 @@ $("#trash").droppable({
   tolerance: "touch", 
   drop: function(event, ui) {
     ui.draggable.remove();
+    $(".bottom-trash").removeClass("bottom-trash-active");
   }, 
-  over: function(event, ui) {},
-  out: function(event,ui) {}
+  over: function(event, ui) {
+    $(".bottom-trash").addClass("class", "bottom-trash-active");
+  },
+  out: function(event,ui) {
+    $(".bottom-trash").removeClass("bottom-trash-active");
+  }
 });
 
 // modal was triggered
@@ -266,6 +275,12 @@ $("#remove-tasks").on("click", function() {
   }
   saveTasks();
 });
+
+setInterval(function() {
+  $(".card .list-group-item").each(function(index, el) { 
+    auditTask(el);
+  });
+}, 1800000);
 
 // load tasks for the first time
 loadTasks();
